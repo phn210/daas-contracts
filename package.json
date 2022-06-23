@@ -1,0 +1,31 @@
+{
+  "name": "DaasDraft",
+  "version": "0.0.1",
+  "description": "Repo for DaaS project",
+  "main": "index.js",
+  "repository": "https://github.com/phn210/daas-draft",
+  "author": "NguyenPham",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.5.0",
+    "@openzeppelin/contracts-upgradeable": "^4.5.2",
+    "@openzeppelin/hardhat-upgrades": "^1.17.0",
+    "bignumber.js": "^9.0.2",
+    "bs58": "^5.0.0",
+    "chai": "^4.3.6",
+    "chai-ethers": "^0.0.1",
+    "dotenv": "^16.0.0",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.9.1",
+    "hardhat-contract-sizer": "^2.5.0",
+    "hardhat-deploy": "^0.11.0",
+    "hardhat-gas-reporter": "^1.0.8",
+    "hardhat-storage-layout": "^0.1.6",
+    "ipfs-http-client": "^56.0.3",
+    "solidity-coverage": "^0.7.20"
+  }
+}
