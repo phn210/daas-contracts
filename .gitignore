@@ -1,0 +1,16 @@
+.env
+
+.DS_Store
+#Buidler files
+cache/
+artifacts/
+node_modules/
+dist/
+build/
+.vscode
+.idea
+coverage*
+yarn-error.log
+yarn.lock
+package-lock.json
+.openzeppelin
