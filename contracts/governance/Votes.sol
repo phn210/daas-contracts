@@ -64,7 +64,7 @@ abstract contract Votes is IVotes {
         if (to == address(0)) {
             _totalCheckpoints.push(_subtract, amount);
         }
-        _moveDelegateVotes(delegates(from), delegates(to), amount);
+        _moveDelegateVotes(delegates(from), to, amount);
     }
 
     /**

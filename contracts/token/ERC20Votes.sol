@@ -26,7 +26,7 @@ contract ERC20Votes is Votes, ERC20 {
      */
     function _afterTokenTransfer(
         address from,
-    address to,
+        address to,
         uint256 amount
     ) internal override {
         _transferVotingUnits(from, to, amount);

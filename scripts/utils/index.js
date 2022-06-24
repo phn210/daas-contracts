@@ -36,6 +36,7 @@ const bn = async () => {
 }
 
 async function moveTimestamp(seconds) {
+    console.log(`Skipping ${seconds} seconds...`);
     console.log("Timestamp before:", await ts());
     await ethers.provider.send("evm_increaseTime", [seconds]);
     await ethers.provider.send("evm_mine");
@@ -49,6 +50,7 @@ async function jumpTo(timestamp) {
 }
 
 async function mineBlocks(nums) {
+    console.log(`Skipping ${nums} blocks...`);
     console.log("Block before:", await bn());
     for (let i = 0; i < nums; i++) await ethers.provider.send("evm_mine");
     console.log("Block after:", await bn());

@@ -1,6 +1,7 @@
 const { ethers, network } = require("hardhat")
 const utils = require('./utils');
 const decoders = require('./utils/decoders');
+const proposals = require('./utils/proposals');
 
 async function main() {
 
@@ -17,14 +18,15 @@ async function main() {
             "ERC20Votes": 0,
             "ERC721Votes": 1
         },
+        standard: 1,
         governorConfig: {
             // [1,100000,1,100000,1,1,1000,20,false]
             minVotingDelay: 1,
             maxVotingDelay: 100000,
             minVotingPeriod: 1,
             maxVotingPeriod: 100000,
-            votingDelay: 1,
-            votingPeriod: 1,
+            votingDelay: 3,
+            votingPeriod: 10,
             quorumNumerator: 1000,
             proposalMaxOperations: 20,
             isWhitelistRequired: false
@@ -45,7 +47,24 @@ async function main() {
             decimals: 18,
             initialSupply: ethers.utils.parseUnits("1.0", 27)
         },
-        infoHash: "0x9187a778899475de505baf633ea472572afb760af5f4a20b25a7be6962dea099"
+        infoHash: "0x9187a778899475de505baf633ea472572afb760af5f4a20b25a7be6962dea099",
+        proposals: [
+            {
+                shortDes: "Test proposal",
+                txs: [
+                    {
+                        target: "",
+                        value: 0,
+                        signature: "",
+                        datas: {
+                            types: [],
+                            params: []
+                        }
+                    }
+                ],
+                ipfsHash: "QmY8joHxQ2abJGceFxhyGt5Kfv4zVEKFkeWqQxqxKizvHE"
+            }
+        ]
     }
 
     const addresses = {
@@ -90,6 +109,11 @@ async function main() {
         },
         erc721votes: {
             name: "ERC721Votes",
+            factory: {},
+            contract: {}
+        },
+        mockGoverned: {
+            name: "MockGoverned",
             factory: {},
             contract: {}
         }
@@ -157,7 +181,7 @@ async function main() {
         config.governorConfig,
         config.timelockConfig,
         addresses.zeroAddress,
-        0,
+        config.standard,
         config.initialization,
         config.infoHash
     );
@@ -181,6 +205,57 @@ async function main() {
             logContract("erc721votes");
             break;
     }
+
+   
+    utils.logDivider("MOCK PROPOSALS & VOTING");
+
+    // Prepare voting power
+    const gToken = contracts[config.standard == 0 ? "erc20votes" : "erc721votes"].contract;
+    let infos = await Promise.all([await Promise.all(signers.map(e => gToken.balanceOf(e.address))), await Promise.all(signers.map(e => gToken.getVotes(e.address)))]);
+    infos[0].map((e, i) => console.log("User", i, "balance:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
+    infos[1].map((e, i) => console.log("User", i, "votes:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
+    console.log("Quorum:", await contracts["governor"].contract.quorum(await utils.bn()-1));
+
+    // Deploy MockGoverned
+    contracts["mockGoverned"].contract = await contracts["mockGoverned"].factory.deploy(getAddress("timelock"));
+    await contracts["mockGoverned"].contract.deployed();
+    logContract("mockGoverned");
+
+    console.log("Before proposal value:", await contracts["mockGoverned"].contract.interestRate());
+
+    const firstProposal = config.proposals[0]
+    firstProposal.txs[0].target = getAddress("mockGoverned");
+    firstProposal.txs[0].signature = "setInterestRate(uint256)";
+    firstProposal.txs[0].datas.types.push("uint256");
+    firstProposal.txs[0].datas.params.push(101);
+    
+    const proposal = proposals.prepareProposal(firstProposal);
+
+    console.log("Delegates...");
+    await gToken.connect(deployer).delegate(user0.address);
+
+    console.log("Propose...");
+    await contracts["governor"].contract.propose(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+    console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
+
+    await utils.mineBlocks(config.governorConfig.votingDelay);
+
+    console.log("User vote", await gToken.getVotes(user0.address));
+    await contracts["governor"].contract.connect(user0).castVote(await contracts["governor"].contract.proposalIds(0), 1);
+    
+    await utils.mineBlocks(config.governorConfig.votingPeriod);
+
+    console.log("Queue...");
+    await contracts["governor"].contract.queue(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+    
+    await utils.moveTimestamp(config.timelockConfig.delay);
+
+    console.log("Execute...");
+    await contracts["governor"].contract.execute(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+
+    console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
+
+    console.log("After proposal value:", await contracts["mockGoverned"].contract.interestRate());
 
     return {
         config,

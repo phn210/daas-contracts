@@ -23,6 +23,15 @@ library Checkpoints {
     struct History {
         Checkpoint[] _checkpoints;
     }
+
+    function length(History storage self) internal view returns (uint256) {
+        return self._checkpoints.length;
+    }
+
+    function index(History storage self, uint256 index) internal view returns (uint256) {
+        require(index < self._checkpoints.length, "Checkpoints: index out of range");
+        return self._checkpoints[index]._value;
+    }
     
     /**
      * @dev Returns the value in the latest checkpoint, or zero if there are no checkpoints.
