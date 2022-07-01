@@ -36,8 +36,8 @@ contract Timelock is Initializable, ITimelock {
      */
     function _updateConfig(TimelockConfig memory _config) internal {
         _validateConfig(_config);
+        emit TimelockConfigUpdated(config, _config);
         config = _config;
-        emit TimelockConfigUpdated(_config);
     }
 
     function _setGovernor(address _governor) internal {

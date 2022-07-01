@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 import './ITimelock.sol';
 import './IVotes.sol';
@@ -62,7 +63,7 @@ interface IGovernor {
         uint256 proposalId,
         address proposer,
         address[] targets,
-        uint256[] values,
+        uint256[] callvalues,
         string[] signatures,
         bytes[] calldatas,
         uint256 startBlock,
@@ -91,7 +92,7 @@ interface IGovernor {
     event EmergencyActions(
         address guardian,
         address[] targets,
-        uint256[] values,
+        uint256[] callvalues,
         string[] signatures,
         bytes[] calldatas,
         string description
@@ -101,7 +102,7 @@ interface IGovernor {
     event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason);
     
     /// @notice Emitted when the delay period for a proposal to become active changed.
-    event GovernorConfigUpdated(GovernorConfig prevConfig, GovernorConfig newConfig);
+    event GovernorConfigUpdated(GovernorConfig oldConfig, GovernorConfig newConfig);
 
     /// @notice Emitted when whitelist account expiration is set.
     event WhitelistProposerExpirationSet(address account, uint expirtation);

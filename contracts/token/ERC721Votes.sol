@@ -37,4 +37,8 @@ contract ERC721Votes is ERC721, Votes {
         _transferVotingUnits(from, to, 1);
         super._afterTokenTransfer(from, to, tokenId);
     }
+
+    function mint(uint256 tokenId) external {
+        _mint(msg.sender, tokenId);
+    }
 }

@@ -226,10 +226,6 @@ contract ERC20 is IERC20, IERC20Metadata, Ownable {
         return true;
     }
 
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
-    }
-
     /**
      * @dev Moves `amount` of tokens from `sender` to `recipient`.
      *

@@ -198,11 +198,7 @@ contract ERC721 is IERC165, IERC721, IERC721Metadata, Ownable {
         require(_isApprovedOrOwner(msg.sender, tokenId), "ERC721: transfer caller is not owner nor approved");
         _safeTransfer(from, to, tokenId, _data);
     }
-
-    function mint(address to, uint256 tokenId) public onlyOwner {
-        _mint(to, tokenId);
-    }
-
+    
     /**
      * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
      * are aware of the ERC721 protocol to prevent tokens from being forever locked.

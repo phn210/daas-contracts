@@ -15,7 +15,7 @@ interface ITimelock {
      * @notice Emitt when timelock's config is updated.
      * @param newConfig Timelock's new configuration.
      */
-    event TimelockConfigUpdated(TimelockConfig newConfig);
+    event TimelockConfigUpdated(TimelockConfig oldConfig, TimelockConfig newConfig);
 
     event GovernorSet(address governor);
 

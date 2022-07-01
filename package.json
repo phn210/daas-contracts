@@ -13,6 +13,7 @@
     "@openzeppelin/contracts": "^4.5.0",
     "@openzeppelin/contracts-upgradeable": "^4.5.2",
     "@openzeppelin/hardhat-upgrades": "^1.17.0",
+    "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "bs58": "^5.0.0",
     "chai": "^4.3.6",
@@ -26,6 +27,7 @@
     "hardhat-gas-reporter": "^1.0.8",
     "hardhat-storage-layout": "^0.1.6",
     "ipfs-http-client": "^56.0.3",
+    "mongoose": "^6.4.0",
     "solidity-coverage": "^0.7.20"
   }
 }

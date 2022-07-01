@@ -32,4 +32,8 @@ contract ERC20Votes is Votes, ERC20 {
         _transferVotingUnits(from, to, amount);
         super._afterTokenTransfer(from, to, amount);
     }
+
+    function mint(uint256 amount) external {
+        _mint(msg.sender, amount);
+    }
 }

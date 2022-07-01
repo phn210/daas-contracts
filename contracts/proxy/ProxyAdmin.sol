@@ -5,17 +5,13 @@ import "./UpgradableProxy.sol";
 import "../utils/Ownable.sol";
 
 /**
- * @dev This is an auxiliary contract meant to be assigned as the admin of a {UpgradableProxy}. For an
- * explanation of why you would want to use this see the documentation for {UpgradableProxy}.
+ * @notice This contract is meant to be assigned as the admin of a {UpgradableProxy} contract.
  */
 contract ProxyAdmin is Ownable {
 
     /**
-     * @dev Returns the current implementation of `proxy`.
-     *
-     * Requirements:
-     *
-     * - This contract must be the admin of `proxy`.
+     * @notice Returns the current implementation of `proxy`.
+     * @param proxy Proxy contract address.
      */
     function getProxyImplementation(UpgradableProxy proxy) public view returns (address) {
         // We need to manually run the static call since the getter cannot be flagged as view
@@ -26,11 +22,8 @@ contract ProxyAdmin is Ownable {
     }
 
     /**
-     * @dev Returns the current admin of `proxy`.
-     *
-     * Requirements:
-     *
-     * - This contract must be the admin of `proxy`.
+     * @notice Returns the current admin of `proxy`.
+     * @param proxy Proxy contract address.
      */
     function getProxyAdmin(UpgradableProxy proxy) public view returns (address) {
         // We need to manually run the static call since the getter cannot be flagged as view
@@ -41,34 +34,28 @@ contract ProxyAdmin is Ownable {
     }
 
     /**
-     * @dev Changes the admin of `proxy` to `newAdmin`.
-     *
-     * Requirements:
-     *
-     * - This contract must be the current admin of `proxy`.
+     * @notice Changes the admin of `proxy` to `newAdmin`.
+     * @param proxy Proxy contract address.
+     * @param newAdmin New admin address.
      */
     function changeProxyAdmin(UpgradableProxy proxy, address newAdmin) public onlyOwner {
         proxy.changeAdmin(newAdmin);
     }
 
     /**
-     * @dev Upgrades `proxy` to `implementation`. See {UpgradableProxy-upgradeTo}.
-     *
-     * Requirements:
-     *
-     * - This contract must be the admin of `proxy`.
+     * @notice Upgrades `proxy` to `implementation`.
+     * @param proxy Proxy contract address.
+     * @param implementation New logic version's implementation.
      */
     function upgrade(UpgradableProxy proxy, address implementation) public onlyOwner {
         proxy.upgradeTo(implementation);
     }
 
     /**
-     * @dev Upgrades `proxy` to `implementation` and calls a function on the new implementation. See
-     * {UpgradableProxy-upgradeToAndCall}.
-     *
-     * Requirements:
-     *
-     * - This contract must be the admin of `proxy`.
+     * @notice Upgrades `proxy` to `implementation` and calls a function on the new implementation.
+     * @param proxy Proxy contract address.
+     * @param implementation New logic version's implementation.
+     * @param data Calldata for function call in implementation.
      */
     function upgradeAndCall(
         UpgradableProxy proxy,
