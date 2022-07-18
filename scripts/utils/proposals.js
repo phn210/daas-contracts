@@ -1,32 +1,12 @@
 const { ethers } = require("hardhat");
 
 function prepareProposal(proposal) {
-    let txs = proposal.txs;
-    targets = () => {
-        obj = [];
-        txs.forEach(tx => {obj.push(tx.target)});
-        return obj;    
-    }
-    values = () => {
-        obj = [];
-        txs.forEach(tx => {obj.push(tx.value)});
-        return obj;    
-    }
-    signatures = () => {
-        obj = [];
-        txs.forEach(tx => {obj.push(tx.signature)});
-        return obj;    
-    }
-    calldatas = () => {
-        obj = [];
-        txs.forEach(tx => {obj.push(ethers.utils.defaultAbiCoder.encode(tx.datas.types, tx.datas.params))});
-        return obj;    
-    }
+    let actions = proposal.txs
+    // .map(tx => tx.data = ethers.utils.defaultAbiCoder.encode(tx.datas.types, tx.datas.params))
+    actions.map(action => action.data = ethers.utils.defaultAbiCoder.encode(action.data.types, action.data.params))
+
     return {
-        targets: targets(),
-        values: values(),
-        signatures: signatures(),
-        calldatas: calldatas(),
+        actions,
         descriptionHash: getDescriptionHash(proposal.ipfsHash)
     }
 }

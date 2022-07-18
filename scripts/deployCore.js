@@ -19,17 +19,20 @@ async function main() {
             "ERC721Votes": 1
         },
         standard: 1,
-        governorConfig: {
-            // [1,100000,1,100000,1,1,1000,20,false]
+        baseConfig: {
+            // [1,100000,1,100000]
             minVotingDelay: 1,
             maxVotingDelay: 100000,
             minVotingPeriod: 1,
             maxVotingPeriod: 100000,
+            isWhitelistRequired: false
+        },
+        governorConfig: {
+            // [3,10,1000,1000]
             votingDelay: 3,
             votingPeriod: 10,
-            quorumNumerator: 1000,
-            proposalMaxOperations: 20,
-            isWhitelistRequired: false
+            quorumAttendance: 1000,
+            quorumApproval: 1000
         },
         timelockConfig: {
             // [1,100000,10,100]
@@ -56,7 +59,7 @@ async function main() {
                         target: "",
                         value: 0,
                         signature: "",
-                        datas: {
+                        data: {
                             types: [],
                             params: []
                         }

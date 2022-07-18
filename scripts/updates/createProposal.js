@@ -149,17 +149,14 @@ async function main() {
             for (let j = 0; j < numProposals; j++) {
                 await(async(proposal , index) => {
                     const preparedProposal = proposals.prepareProposal(proposal);
-                    let tx = await contracts['governor'].contract.propose(preparedProposal.targets, preparedProposal.values, preparedProposal.signatures, preparedProposal.calldatas, preparedProposal.descriptionHash);
+                    let tx = await contracts['governor'].contract.propose(0, 0, preparedProposal.actions, preparedProposal.descriptionHash);
                     await tx.wait();
                     console.log(`Proposal ${index+1} created for DAO ${id+1}.`);
                 })(proposalConfig(contracts['mockGoverned'].contract).mock[j], j);
             }
             utils.logDivider('');
         })(daoConfig(deployer).mock[i], i);
-    }
-
-        
-
+    } 
 
     utils.logDivider('VOTING');
 

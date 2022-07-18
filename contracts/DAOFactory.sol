@@ -57,23 +57,38 @@ contract DAOFactory is Initializable, ProxyFactory {
     
     /* ===== INTERNAL FUNCTIONS ===== */
 
-    function _createGovernor(address _admin, address[] memory _founders, IGovernor.GovernorConfig memory _config, address _timelock, address _gToken) internal returns (address governor_) {
+    function _createGovernor(
+        address _admin,
+        address[] memory _admins,
+        IGovernor.GovernorBaseConfig memory _baseConfig,
+        IGovernor.GovernorConfig memory _config,
+        address _timelock,
+        address _gToken
+    ) internal returns (address governor_) {
         bytes memory initializeData = abi.encodeWithSignature(
-            "initialize(address[],(uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint8,bool),address,address)",
-            _founders, _config, _timelock, _gToken     
+            "initialize(address[],(uint32,uint32,uint32,uint32,bool),(uint32,uint32,uint32,uint32),address,address)",
+            _admins, _baseConfig, _config, _timelock, _gToken     
         );
         governor_ = _createProxy(governorLogic, _admin, initializeData);
     }
 
-    function _createTimelock(address _admin, ITimelock.TimelockConfig memory _config) internal returns (address timelock_){
+    function _createTimelock(
+        address _admin,
+        ITimelock.TimelockConfig memory _config
+    ) internal returns (address timelock_){
         bytes memory initializeData = abi.encodeWithSignature(
-            "initialize((uint32,uint32,uint32,uint32),address)",
-            _config, address(this)
+            "initialize((uint32,uint32,uint32,uint32),address,address)",
+            _config, address(this), address(this)
         );
         timelock_ = _createProxy(timelockLogic, _admin, initializeData);
     }
 
-    function _createGToken(address _timelock, address _gToken, IGTokenFactory.GTokenStandard _standard, IVotes.Initialization memory _initialization) internal returns (address gToken_) {
+    function _createGToken(
+        address _timelock, 
+        address _gToken,
+        IGTokenFactory.GTokenStandard _standard,
+        IVotes.Initialization memory _initialization
+    ) internal returns (address gToken_) {
         if (_gToken == address(0)) {
             gToken_ = IGTokenFactory(gTokenFactory).createToken(_standard, _initialization, _timelock);
         } else {
@@ -81,17 +96,27 @@ contract DAOFactory is Initializable, ProxyFactory {
         }
     }
 
-    function _createDAO(address[] memory _founders, IGovernor.GovernorConfig memory _governorConfig, ITimelock.TimelockConfig memory _timelockConfig, address _gToken, IGTokenFactory.GTokenStandard _standard, IVotes.Initialization memory _initialization, bytes32 _infoHash) internal returns (uint256) {
-        address admin = _createProxyAdmin();
-        address timelock = _createTimelock(admin, _timelockConfig);
+    function _createDAO(
+        address[] memory _admins, 
+        IGovernor.GovernorBaseConfig memory _baseConfig, 
+        IGovernor.GovernorConfig memory _governorConfig, 
+        ITimelock.TimelockConfig memory _timelockConfig, 
+        address _gToken, 
+        IGTokenFactory.GTokenStandard _standard, 
+        IVotes.Initialization memory _initialization, 
+        bytes32 _infoHash
+    ) internal returns (uint256) {
+        address proxyAdmin = _createProxyAdmin();
+        address timelock = _createTimelock(proxyAdmin, _timelockConfig);
         address gToken = _createGToken(timelock, _gToken, _standard, _initialization);
-        address governor = _createGovernor(admin, _founders, _governorConfig, timelock, gToken);
-        ProxyAdmin(admin).transferOwnership(timelock);     
+        address governor = _createGovernor(proxyAdmin, _admins, _baseConfig, _governorConfig, timelock, gToken);
+        ProxyAdmin(proxyAdmin).transferOwnership(timelock);     
         ITimelock(timelock).setGovernor(governor);
+        ITimelock(timelock).setMaster(timelock);
 
         DAO storage dao = daos[daoId];
         dao.infoHash = _infoHash;
-        dao.proxyAdmin = admin;
+        dao.proxyAdmin = proxyAdmin;
         dao.governor = governor;
         dao.standard = _standard;
 
@@ -105,7 +130,7 @@ contract DAOFactory is Initializable, ProxyFactory {
         require(isDAOExisted(_daoId) == true, "DAOFactory::_updateDAO: DAO is not existed!");
         require(isDAORetired(_daoId) == true, "DAOFactory::_updateDAO: DAO is retired!");
         DAO memory dao = daos[_daoId];
-        require(msg.sender == address(IGovernor(dao.governor).timelock()), "DAOFactory::_updateDAO: Update call must come from timelock!");
+        require(msg.sender == address(IGovernor(dao.governor).timelocks(0)), "DAOFactory::_updateDAO: Update call must come from root timelock!");
 
         daos[_daoId] = _updatedDAO;
         emit DAOUpdated(_daoId, _updatedDAO);
@@ -173,8 +198,8 @@ contract DAOFactory is Initializable, ProxyFactory {
 
     /* ===== MUTATIVE FUNCTIONS ===== */
 
-    function createDAO(address[] memory _founders, IGovernor.GovernorConfig memory _governorConfig, ITimelock.TimelockConfig memory _timelockConfig, address _gToken, IGTokenFactory.GTokenStandard _standard, IVotes.Initialization memory _initialization, bytes32 _infoHash) external payable returns (uint256) {
-        return _createDAO(_founders, _governorConfig, _timelockConfig, _gToken, _standard, _initialization, _infoHash);
+    function createDAO(address[] memory _admins, IGovernor.GovernorBaseConfig memory _baseConfig, IGovernor.GovernorConfig memory _governorConfig, ITimelock.TimelockConfig memory _timelockConfig, address _gToken, IGTokenFactory.GTokenStandard _standard, IVotes.Initialization memory _initialization, bytes32 _infoHash) external payable returns (uint256) {
+        return _createDAO(_admins, _baseConfig, _governorConfig, _timelockConfig, _gToken, _standard, _initialization, _infoHash);
     }
 
     function updateDAO(uint256 _daoId, DAO memory _updatedDAO) external {

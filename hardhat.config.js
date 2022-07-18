@@ -37,20 +37,26 @@ const networks = {
   },
   testnetbsc: {
     url: "https://data-seed-prebsc-2-s2.binance.org:8545/",
+    // "https://data-seed-prebsc-1-s3.binance.org:8545/"
     chainId: 97,
     accounts: process.env.KEYS?.split(" "),
     explorer: "https://testnet.bscscan.com/"
   },
-  kovan:{
-    chainId: 42,
-    url: "https://speedy-nodes-nyc.moralis.io/884c451ac01af3a0539e7e3c/eth/kovan",
-    explorer: "https://kovan.etherscan.io/"
-  },
-  // rinkeby: {
-  //   chainId: 0,
-  //   url: "",
-  //   explorer: ""
-  // }
+  // kovan:{
+  //   chainId: 42,
+  //   url: [
+  //     "https://speedy-nodes-nyc.moralis.io/884c451ac01af3a0539e7e3c/eth/kovan",
+  //     "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+  //   ],
+  //   explorer: "https://kovan.etherscan.io/"
+  // },
+  rinkeby: {
+    chainId: 4,
+    url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    // "https://ethereum-rinkeby-rpc.allthatnode.com/"
+    // "https://rinkeby-light.eth.linkpool.io"
+    explorer: "https://rinkeby.etherscan.io/"
+  }
   // mainnetbsc: {
   //   url: "https://bsc-dataseed.binance.org/",
   //   chainId: 56,
@@ -95,5 +101,9 @@ module.exports = {
     disambiguatePaths: false,
     runOnCompile: true,
     strict: true,
+  },
+  gasReporter: {
+    currency: 'CHF',
+    gasPrice: 21
   }
 };

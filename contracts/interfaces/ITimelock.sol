@@ -19,6 +19,8 @@ interface ITimelock {
 
     event GovernorSet(address governor);
 
+    event MasterTimelockSet(address master);
+
     /**
      * @notice Emitted when governor migrated to new timelock.
      * @param newTimelock New timelock address.
@@ -69,4 +71,5 @@ interface ITimelock {
     function executeTransaction(address target, uint value, string calldata signature, bytes calldata data, uint eta) external payable returns (bytes memory);
     function emergencyTransaction(address target, uint value, string calldata signature, bytes calldata data) external payable returns (bytes memory);
     function setGovernor(address governor) external;
+    function setMaster(address governor) external;
 }

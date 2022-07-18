@@ -8,7 +8,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "toggleWhitelistedToken(address)",
-                        datas: {
+                        data: {
                             types: ["address"],
                             params: ['0x'+'0'.repeat(39)+'1']
                         }
@@ -17,7 +17,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "setPriceOracle(address,address)",
-                        datas: {
+                        data: {
                             types: ["address", "address"],
                             params: ['0x'+'0'.repeat(39)+'0', '0x'+'0'.repeat(39)+'1']
                         }
@@ -32,7 +32,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "setInterestRate(uint256)",
-                        datas: {
+                        data: {
                             types: ["uint256"],
                             params: [10]
                         }
@@ -47,7 +47,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "setPriceOracle(address,address)",
-                        datas: {
+                        data: {
                             types: ["address", "address"],
                             params: ['0x'+'0'.repeat(39)+'1', '0x'+'0'.repeat(39)+'1']
                         }
@@ -56,7 +56,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "setPriceOracle(address,address)",
-                        datas: {
+                        data: {
                             types: ["address", "address"],
                             params: ['0x'+'0'.repeat(39)+'2', '0x'+'0'.repeat(39)+'2']
                         }
@@ -65,7 +65,7 @@ const proposals = (mockGoverned) => {
                         target: mockGoverned.address,
                         value: 0,
                         signature: "setPriceOracle(address,address)",
-                        datas: {
+                        data: {
                             types: ["address", "address"],
                             params: ['0x'+'0'.repeat(39)+'3', '0x'+'0'.repeat(39)+'3']
                         }

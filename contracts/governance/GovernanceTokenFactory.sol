@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import './interfaces/IGTokenFactory.sol';
-import './token/ERC20Votes.sol';
-import './token/ERC721Votes.sol';
-import './utils/Ownable.sol';
+import '../interfaces/IGTokenFactory.sol';
+import '../token/ERC20Votes.sol';
+import '../token/ERC721Votes.sol';
+import '../utils/Ownable.sol';
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 contract GovernanceTokenFactory is IGTokenFactory {

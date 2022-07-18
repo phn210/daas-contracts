@@ -19,17 +19,20 @@ async function main() {
             "ERC721Votes": 1
         },
         standard: 1,
-        governorConfig: {
-            // [1,100000,1,100000,1,1,1000,20,false]
+        baseConfig: {
+            // [1,100000,1,100000]
             minVotingDelay: 1,
             maxVotingDelay: 100000,
             minVotingPeriod: 1,
             maxVotingPeriod: 100000,
+            isWhitelistRequired: false
+        },
+        governorConfig: {
+            // [3,10,1000,1000]
             votingDelay: 3,
             votingPeriod: 10,
-            quorumNumerator: 1000,
-            proposalMaxOperations: 20,
-            isWhitelistRequired: false
+            quorumAttendance: 1000,
+            quorumApproval: 1000
         },
         timelockConfig: {
             // [1,100000,10,100]
@@ -56,7 +59,7 @@ async function main() {
                         target: "",
                         value: 0,
                         signature: "",
-                        datas: {
+                        data: {
                             types: [],
                             params: []
                         }
@@ -178,6 +181,7 @@ async function main() {
 
     await contracts["daoFactory"].contract.createDAO(
         [deployer.address],
+        config.baseConfig,
         config.governorConfig,
         config.timelockConfig,
         addresses.zeroAddress,
@@ -191,17 +195,17 @@ async function main() {
     console.log("First DAO:", firstDAO);
 
     contracts["governor"].contract = contracts["governor"].factory.attach(firstDAO.governor);
-    contracts["timelock"].contract = contracts["timelock"].factory.attach(await contracts["governor"].contract.timelock());
+    contracts["timelock"].contract = contracts["timelock"].factory.attach(await contracts["governor"].contract.timelocks(0));
     logContract("governor");
     logContract("timelock");
     
     switch (firstDAO.standard) {
         case config.standards["ERC20Votes"]:
-            contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(await contracts["governor"].contract.gToken())
+            contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(await contracts["governor"].contract.votes())
             logContract("erc20votes");
             break;
         case config.standards["ERC721Votes"]:
-            contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(await contracts["governor"].contract.gToken())
+            contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(await contracts["governor"].contract.votes())
             logContract("erc721votes");
             break;
     }
@@ -214,7 +218,8 @@ async function main() {
     let infos = await Promise.all([await Promise.all(signers.map(e => gToken.balanceOf(e.address))), await Promise.all(signers.map(e => gToken.getVotes(e.address)))]);
     infos[0].map((e, i) => console.log("User", i, "balance:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
     infos[1].map((e, i) => console.log("User", i, "votes:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
-    console.log("Quorum:", await contracts["governor"].contract.quorum(await utils.bn()-1));
+    console.log("Quorum attendance:", await contracts["governor"].contract.quorum(config.governorConfig.quorumAttendance, await utils.bn()-1));
+    console.log("Quorum approval:", await contracts["governor"].contract.quorum(config.governorConfig.quorumApproval, await utils.bn()-1));
 
     // Deploy MockGoverned
     contracts["mockGoverned"].contract = await contracts["mockGoverned"].factory.deploy(getAddress("timelock"));
@@ -226,8 +231,8 @@ async function main() {
     const firstProposal = config.proposals[0]
     firstProposal.txs[0].target = getAddress("mockGoverned");
     firstProposal.txs[0].signature = "setInterestRate(uint256)";
-    firstProposal.txs[0].datas.types.push("uint256");
-    firstProposal.txs[0].datas.params.push(101);
+    firstProposal.txs[0].data.types.push("uint256");
+    firstProposal.txs[0].data.params.push(101);
     
     const proposal = proposals.prepareProposal(firstProposal);
 
@@ -235,7 +240,8 @@ async function main() {
     await gToken.connect(deployer).delegate(user0.address);
 
     console.log("Propose...");
-    await contracts["governor"].contract.propose(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+    console.log(proposal.actions)
+    await contracts["governor"].contract.propose(0, 0, proposal.actions, proposal.descriptionHash);
     console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
 
     await utils.mineBlocks(config.governorConfig.votingDelay);
@@ -246,12 +252,12 @@ async function main() {
     await utils.mineBlocks(config.governorConfig.votingPeriod);
 
     console.log("Queue...");
-    await contracts["governor"].contract.queue(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+    await contracts["governor"].contract.queue(proposal.actions, proposal.descriptionHash);
     
     await utils.moveTimestamp(config.timelockConfig.delay);
 
     console.log("Execute...");
-    await contracts["governor"].contract.execute(proposal.targets, proposal.values, proposal.signatures, proposal.calldatas, proposal.descriptionHash);
+    await contracts["governor"].contract.execute(proposal.actions, proposal.descriptionHash);
 
     console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
 

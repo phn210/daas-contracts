@@ -8,25 +8,32 @@ import '@openzeppelin/contracts/proxy/utils/Initializable.sol';
 contract Timelock is Initializable, ITimelock {
 
     TimelockConfig public config;
-    address private governor;
+    address public governor;
+    address public master;
     mapping (bytes32 => bool) public queuedTransactions;
 
     modifier onlyGovernor() {
         require(msg.sender == governor, "Timelock: call must come from governor.");
         _;
     }
+
+    modifier onlyMaster() {
+        require(msg.sender == master, "Timelock: call must come from master timelock.");
+        _;
+    }
     
     /* ========== FUNCTIONS ========== */
 
-    function initialize(TimelockConfig memory _config, address _governor) public initializer {
+    function initialize(TimelockConfig memory _config, address _governor, address _master) public initializer {
         _updateConfig(_config);
         _setGovernor(_governor);
+        _setMaster(_master);
     }
 
 
     /* ========== INTERNAL FUNCTIONS ========== */
 
-    function _validateConfig(TimelockConfig memory _config) internal pure returns (bool){
+    function validateConfig(TimelockConfig memory _config) public pure returns (bool){
         require(_config.delay >= _config.minTimelockDelay && _config.delay <= _config.maxTimelockDelay, "Timelock::validateConfig: out of range timelock delay.");
     }
 
@@ -35,21 +42,22 @@ contract Timelock is Initializable, ITimelock {
      * @param _config New configuration.
      */
     function _updateConfig(TimelockConfig memory _config) internal {
-        _validateConfig(_config);
+        validateConfig(_config);
         emit TimelockConfigUpdated(config, _config);
         config = _config;
     }
 
     function _setGovernor(address _governor) internal {
         governor = _governor;
-        emit GovernorSet(_governor);
+        emit GovernorSet(governor);
+    }
+
+    function _setMaster(address _master) internal {
+        master = _master;
+        emit MasterTimelockSet(master);
     }
 
     /* ========== VIEW FUNCTIONS ========== */
-
-    function validateConfig(TimelockConfig memory _config) external view returns (bool) {
-        return _validateConfig(_config);
-    }
 
     function delay() public view returns (uint32){
         return config.delay;
@@ -70,9 +78,13 @@ contract Timelock is Initializable, ITimelock {
         _setGovernor(_governor);
     }
 
-    function updateConfig(TimelockConfig memory _config) public {
-        require(msg.sender == address(this), "Timelock::setDelay: Call must come from Timelock.");
+    function updateConfig(TimelockConfig memory _config) public onlyMaster {
         _updateConfig(_config);
+    }
+
+    function setMaster(address newMaster) public onlyMaster {
+        require(newMaster != address(0), "Timelock::setMasterTimelock: Master timelock can not be zero address");
+        _setMaster(newMaster);
     }
 
     /**

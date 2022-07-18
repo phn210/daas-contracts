@@ -22,17 +22,20 @@ async function main() {
             "ERC721Votes": 1
         },
         standard: 1,
-        governorConfig: {
-            // [1,100000,1,100000,1,1,1000,20,false]
+        baseConfig: {
+            // [1,100000,1,100000]
             minVotingDelay: 1,
             maxVotingDelay: 100000,
             minVotingPeriod: 1,
             maxVotingPeriod: 100000,
+            isWhitelistRequired: false
+        },
+        governorConfig: {
+            // [3,10,1000,1000]
             votingDelay: 3,
             votingPeriod: 10,
-            quorumNumerator: 1000,
-            proposalMaxOperations: 20,
-            isWhitelistRequired: false
+            quorumAttendance: 1000,
+            quorumApproval: 1000
         },
         timelockConfig: {
             // [1,100000,10,100]
@@ -59,7 +62,7 @@ async function main() {
                         target: "",
                         value: 0,
                         signature: "",
-                        datas: {
+                        data: {
                             types: [],
                             params: []
                         }
@@ -177,6 +180,7 @@ async function main() {
         await (async (e, i) => {
             let tx = await contracts["daoFactory"].contract.createDAO(
                 [deployer.address],
+                e.baseConfig,
                 e.governorConfig,
                 e.timelockConfig,
                 addresses.zeroAddress,
@@ -191,17 +195,17 @@ async function main() {
             console.log(`DAO ${i+1}:`, dao);
 
             contracts["governor"].contract = contracts["governor"].factory.attach(dao.governor);
-            contracts["timelock"].contract = contracts["timelock"].factory.attach(await contracts["governor"].contract.timelock());
+            contracts["timelock"].contract = contracts["timelock"].factory.attach(await contracts["governor"].contract.timelocks(0));
             logContract("governor");
             logContract("timelock");
             
             switch (dao.standard) {
                 case config.standards["ERC20Votes"]:
-                    contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(await contracts["governor"].contract.gToken())
+                    contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(await contracts["governor"].contract.votes())
                     logContract("erc20votes");
                     break;
                 case config.standards["ERC721Votes"]:
-                    contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(await contracts["governor"].contract.gToken())
+                    contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(await contracts["governor"].contract.votes())
                     logContract("erc721votes");
                     break;
             }

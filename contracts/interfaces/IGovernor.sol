@@ -6,6 +6,21 @@ import './IVotes.sol';
 
 interface IGovernor {
 
+    struct GovernorBaseConfig {
+        uint32 minVotingDelay;
+        uint32 maxVotingDelay;
+        uint32 minVotingPeriod;
+        uint32 maxVotingPeriod;
+        bool isWhitelistRequired;
+    }
+
+    struct GovernorConfig {
+        uint32 votingDelay;
+        uint32 votingPeriod;
+        uint32 quorumAttendance;
+        uint32 quorumApproval;
+    }
+
     /// @notice Proposal's status
     enum ProposalState {
         Pending,
@@ -18,18 +33,6 @@ interface IGovernor {
         Executed
     }
 
-    struct GovernorConfig {
-        uint32 minVotingDelay;
-        uint32 maxVotingDelay;
-        uint32 minVotingPeriod;
-        uint32 maxVotingPeriod;
-        uint32 votingDelay;
-        uint32 votingPeriod;
-        uint32 quorumNumerator;
-        uint8 proposalMaxOperations;
-        bool isWhitelistRequired;
-    }
-
     /// @notice Information of a proposal saved in storage.
     struct Proposal {
         uint256 id;             // Unique hash for looking up a proposal.
@@ -40,9 +43,19 @@ interface IGovernor {
         uint32 duration;        // Voting duration to calc the block at which voting ends: votes must be cast prior to this block.
         uint32 eta;             // The timestamp that the proposal will be available for execution, set once the vote succeeds.
         address proposer;       // Creator of the proposal.
+        uint32 quorumAttendance;// 
+        uint32 quorumApproval;  //
         bool canceled;          // Flag marking whether the proposal has been canceled.
         bool executed;          // Flag marking whether the proposal has been executed.
+        ITimelock timelock;     // Timelock address for execution.
         mapping (address => Receipt) receipts;      // Receipts of ballots for the entire set of voters.
+    }
+
+    struct Action {
+        address target;
+        uint256 value;
+        string signature;
+        bytes data;
     }
 
     /**
@@ -62,10 +75,8 @@ interface IGovernor {
         uint256 index,
         uint256 proposalId,
         address proposer,
-        address[] targets,
-        uint256[] callvalues,
-        string[] signatures,
-        bytes[] calldatas,
+        address timelock,
+        Action[] actions,
         uint256 startBlock,
         uint256 endBlock,
         bytes32 descriptionHash
@@ -91,18 +102,22 @@ interface IGovernor {
      */
     event EmergencyActions(
         address guardian,
-        address[] targets,
-        uint256[] callvalues,
-        string[] signatures,
-        bytes[] calldatas,
+        address timelock,
+        Action[] actions,
         string description
     );
 
     /// @notice Emitted when a vote casted.
     event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason);
     
-    /// @notice Emitted when the delay period for a proposal to become active changed.
-    event GovernorConfigUpdated(GovernorConfig oldConfig, GovernorConfig newConfig);
+    event GovernorBaseConfigUpdated(GovernorBaseConfig oldConfig, GovernorBaseConfig newConfig);
+
+    event AdminsUpdated(address[] admins);
+
+    event GovernorConfigsUpdated(GovernorConfig[] configs);
+
+    /// @notice Emitted when a new timelock contract is set.
+    event TimelocksUpdated(ITimelock[] timelocks);
 
     /// @notice Emitted when whitelist account expiration is set.
     event WhitelistProposerExpirationSet(address account, uint expirtation);
@@ -110,89 +125,64 @@ interface IGovernor {
     /// @notice Emitted when the whitelistGuardian is set.
     event NewGuardianSet(address oldGuardian, address newGuardian);
 
-    /// @notice Emitted when a new timelock contract is set.
-    event NewTimelockSet(ITimelock oldTimelock, ITimelock newTimelock);
-
-    function timelock() external returns (ITimelock);
+    // function configs() external returns (GovernorConfig[] memory);
+    // function configs(uint256 index) external return (GovernorConfig);
+    // function timelocks() external returns (ITimelock[] memory);
+    function timelocks(uint256 index) external returns (ITimelock);
 
     /**
      * @notice Propose a new proposal with special requirements for proposer.
-     * @param targets Target contracts
-     * @param values Calls' value
-     * @param signatures Target functions' signature
-     * @param calldatas Calldatas
+     * @param timelock Target contracts
+     * @param config Governor Config index
+     * @param actions Proposal's actions
      * @param descriptionHash IPFS hash of proposal's description
      */
 
     function propose(
-        address[] memory targets,
-        uint256[] memory values,
-        string[] memory signatures,
-        bytes[] memory calldatas,
+        uint256 timelock,
+        uint256 config,
+        Action[] memory actions,
         bytes32 descriptionHash
     ) external returns (uint256 proposalId);
 
     /**
      * @notice Queue a succeeded proposal. This requires the quorum to be reached, the vote to be successful, and the voting period has ended.
-     * @param targets Target contracts
-     * @param values Calls' value
-     * @param signatures Target functions' signature
-     * @param calldatas Calldatas
+     * @param actions Proposal's actions
      * @param descriptionHash IPFS hash of proposal's description
      */
     function queue(
-        address[] memory targets,
-        uint256[] memory values,
-        string[] memory signatures,
-        bytes[] memory calldatas,
+        Action[] memory actions,
         bytes32 descriptionHash
     ) external;
 
     /**
      * @notice Execute a succeeded proposal. This requires the quorum to be reached, the vote to be successful, and the timelock delay period has passed.
-     * @param targets Target contracts
-     * @param values Calls' value
-     * @param signatures Target functions' signature
-     * @param calldatas Calldatas
+     * @param actions Proposal's actions
      * @param descriptionHash IPFS hash of proposal's description
      */
     function execute(
-        address[] memory targets,
-        uint256[] memory values,
-        string[] memory signatures,
-        bytes[] memory calldatas,
+        Action[] memory actions,
         bytes32 descriptionHash
     ) external payable;
 
     /**
      * @notice Cancel a queued proposal. This requires the proposer has not been executed yet.
-     * @param targets Target contracts
-     * @param values Calls' value
-     * @param signatures Target functions' signature
-     * @param calldatas Calldatas
+     * @param actions Proposal's actions
      * @param descriptionHash IPFS hash of proposal's description
      */
     function cancel(
-        address[] memory targets,
-        uint256[] memory values,
-        string[] memory signatures,
-        bytes[] memory calldatas,
+        Action[] memory actions,
         bytes32 descriptionHash
     ) external;
 
     /**
      * @notice Perform emergency actions for protocol's stability & development. This requires guardian authority.
-     * @param targets Target contracts
-     * @param values Calls' value
-     * @param signatures Target functions' signature
-     * @param calldatas Calldatas
+     * @param actions Proposal's actions
      * @param description Explaination for emergency actions
      */
     function emergencyCall(
-        address[] memory targets,
-        uint256[] memory values,
-        string[] memory signatures,
-        bytes[] memory calldatas,
+        uint256 timelock,
+        Action[] memory actions,
         string memory description
     ) external payable;
 

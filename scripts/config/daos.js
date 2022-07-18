@@ -12,28 +12,26 @@ const daos = (deployer) => {
                     mockGoverned: '0x466C2C8c3d3aF0c55cf80146fAB394953215b2AC'
                 },
                 standard: 0,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 3,
-                    votingPeriod: 100,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 3,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 10,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'AVEE',
                     symbol: 'AVE',
                     owner: deployer.address,
@@ -51,28 +49,26 @@ const daos = (deployer) => {
                     mockGoverned: '0x26B23E0feBe16d801D852b6cEF10232ee83762FD'
                 },
                 standard: 0,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 5,
-                    votingPeriod: 150,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 150,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 12,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'CUV',
                     symbol: 'CUV',
                     owner: deployer.address,
@@ -90,28 +86,26 @@ const daos = (deployer) => {
                     mockGoverned: '0xB752C7e5fe53CDEAf26945AAC16BECd4D03453b1'
                 },
                 standard: 1,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 2,
-                    votingPeriod: 120,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 2,
+                    votingPeriod: 120,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 9,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'UNC',
                     symbol: 'UNC',
                     owner: deployer.address,
@@ -129,28 +123,26 @@ const daos = (deployer) => {
                     mockGoverned: '0xbd70d9A8E1A651B6829C21B1a76aFE609Ce50c36'
                 },
                 standard: 0,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 1,
-                    votingPeriod: 80,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 1,
+                    votingPeriod: 80,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 10,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'MEK',
                     symbol: 'MEK',
                     owner: deployer.address,
@@ -168,28 +160,26 @@ const daos = (deployer) => {
                     mockGoverned: '0x98D669278F61BCC6a5c6c36b2F47b749364beA07'
                 },
                 standard: 1,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 5,
-                    votingPeriod: 100,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 11,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'CMPO',
                     symbol: 'CMPO',
                     owner: deployer.address,
@@ -207,28 +197,26 @@ const daos = (deployer) => {
                     mockGoverned: '0x24C17bf9Af7A0e372D8B3571dBa12C216Bc44E42'
                 },
                 standard: 0,
-                governorConfig: {
-                    // [1,100000,1,100000,1,1,1000,20,false]
+                baseConfig: {
                     minVotingDelay: 1,
                     maxVotingDelay: 100000,
                     minVotingPeriod: 1,
                     maxVotingPeriod: 100000,
-                    votingDelay: 10,
-                    votingPeriod: 300,
-                    quorumNumerator: 1000,
-                    proposalMaxOperations: 20,
                     isWhitelistRequired: false
                 },
+                governorConfig: {
+                    votingDelay: 10,
+                    votingPeriod: 300,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
                 timelockConfig: {
-                    // [1,100000,10,100]
                     minTimelockDelay: 1,
                     maxTimelockDelay: 100000,
                     delay: 20,
                     gracePeriod: 100
                 },
                 initialization: {
-                    // erc721: ["Test","TST",""]
-                    // erc20: ["Test","TST","",18,"1000000000000000000000000000"]
                     name: 'PEN',
                     symbol: 'PEN',
                     owner: deployer.address,
