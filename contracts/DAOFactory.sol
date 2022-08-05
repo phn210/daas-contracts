@@ -198,7 +198,15 @@ contract DAOFactory is Initializable, ProxyFactory {
 
     /* ===== MUTATIVE FUNCTIONS ===== */
 
-    function createDAO(address[] memory _admins, IGovernor.GovernorBaseConfig memory _baseConfig, IGovernor.GovernorConfig memory _governorConfig, ITimelock.TimelockConfig memory _timelockConfig, address _gToken, IGTokenFactory.GTokenStandard _standard, IVotes.Initialization memory _initialization, bytes32 _infoHash) external payable returns (uint256) {
+    function createDAO(
+        address[] memory _admins,
+        IGovernor.GovernorBaseConfig memory _baseConfig,
+        IGovernor.GovernorConfig memory _governorConfig,
+        ITimelock.TimelockConfig memory _timelockConfig,
+        address _gToken, IGTokenFactory.GTokenStandard _standard,
+        IVotes.Initialization memory _initialization,
+        bytes32 _infoHash
+    ) external payable returns (uint256) {
         return _createDAO(_admins, _baseConfig, _governorConfig, _timelockConfig, _gToken, _standard, _initialization, _infoHash);
     }
 

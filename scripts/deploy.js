@@ -136,7 +136,8 @@ async function main() {
 
     // Deploy ProxyAdmin
     preCalcAddress = await contracts["proxyFactory"].contract.callStatic.createProxyAdmin(deployer.address);
-    await contracts["proxyFactory"].contract.createProxyAdmin(deployer.address);
+    tx = await contracts["proxyFactory"].contract.createProxyAdmin(deployer.address);
+    await tx.wait();
     contracts["proxyAdmin"].contract = contracts["proxyAdmin"].factory.attach(preCalcAddress);
     logContract("proxyAdmin");
 
@@ -145,7 +146,8 @@ async function main() {
     await contracts["gTokenFactory"].contract.deployed();
 
     preCalcAddress = await contracts["proxyFactory"].contract.callStatic.createProxy(getAddress("gTokenFactory"), await getAddress("proxyAdmin"), "0x");
-    await contracts["proxyFactory"].contract.createProxy(getAddress("gTokenFactory"), getAddress("proxyAdmin"), "0x");
+    tx = await contracts["proxyFactory"].contract.createProxy(getAddress("gTokenFactory"), getAddress("proxyAdmin"), "0x");
+    await tx.wait();
     contracts["gTokenFactory"].contract = contracts["gTokenFactory"].factory.attach(preCalcAddress);
     logContract("gTokenFactory");
 
@@ -168,18 +170,19 @@ async function main() {
         ["address", "address", "address", "address"],
         [getAddress("governor"), getAddress("timelock"), getAddress("gTokenFactory"), deployer.address]
     ));
-    await contracts["proxyFactory"].contract.createProxy(getAddress("daoFactory"), getAddress("proxyAdmin"), utils.encodeWithSignature(
+    tx = await contracts["proxyFactory"].contract.createProxy(getAddress("daoFactory"), getAddress("proxyAdmin"), utils.encodeWithSignature(
         "initialize(address,address,address,address)",
         ["address", "address", "address", "address"],
         [getAddress("governor"), getAddress("timelock"), getAddress("gTokenFactory"), deployer.address]
     ));
+    await tx.wait();
     contracts["daoFactory"].contract = contracts["daoFactory"].factory.attach(preCalcAddress);
     logContract("daoFactory");
     
     // Create First DAO
     utils.logDivider("DAAS DAO");
 
-    await contracts["daoFactory"].contract.createDAO(
+    tx = await contracts["daoFactory"].contract.createDAO(
         [deployer.address],
         config.baseConfig,
         config.governorConfig,
@@ -189,6 +192,7 @@ async function main() {
         config.initialization,
         config.infoHash
     );
+    await tx.wait();
 
     const encodedData = await contracts["daoFactory"].contract.daosInfo([0]);
     const firstDAO = decoders.daoList(encodedData)[0];
