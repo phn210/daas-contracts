@@ -38,7 +38,7 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmUrD5X5zKnf7vQJjNmB7AmsHcAVj67yfzav4PLrfwzQgh'
+                infoHash: 'QmQ1XSSrSirhS2nAjBqL5wzBEv1kjU2ckU5ZnyM6PygCvr'
             },
             {
                 deployed: {
@@ -75,7 +75,7 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmeMDxZaiPUuFyqXrSCkY8DEm3fft8c5cTbjTeG3j3cxm5'
+                infoHash: 'QmbgvCSGxw6r59LYYWQj6z1CUZU6ZHfwVseeeUKfSoH9mw'
             },
             {
                 deployed: {
@@ -112,7 +112,7 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmZskAJu484DK9zCCekrLPdPRBAAUEQtRvVRiHsGvUXzqd'
+                infoHash: 'QmYLtxKJEURJ7KoGeqmT1wyERLCHtH4gdr7bSJRYa537Ub'
             },
             {
                 deployed: {
@@ -149,7 +149,7 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmfHnRwmyLmTwJd1xrjuaAACp25Udhwiu31vwcJ9eP1XCU'
+                infoHash: 'QmUTa5p9ukfnXAvEraK7GczcdZnJKix4dLm9KwWTsn2xBt'
             },
             {
                 deployed: {
@@ -186,7 +186,7 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmbyBUXsG5NZxzsV2tQMTs735L6qu3NDqU3VJXvaM3Y9Js'
+                infoHash: 'QmQ3kFbqz1rhe6Ym9CMCNPmsfA64uh1qtrir5MfM541VQU'
             },
             {
                 deployed: {
@@ -223,11 +223,569 @@ const daos = (deployer) => {
                     decimals: 18,
                     initialSupply: ethers.utils.parseUnits("1.0", 27)
                 },
-                infoHash: 'QmYsx56RqnLQQ6fpLp57vR94u1E3NDZ8afqQ4QDxKv4oZp'
+                infoHash: 'QmbACp2vABBpRu9h1r8zwMyEhT9UgZm2iDYhRGKVBAu7VQ'
+            },
+        ],
+        localhost: [
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 3,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 10,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'AVEE',
+                    symbol: 'AVE',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmQ1XSSrSirhS2nAjBqL5wzBEv1kjU2ckU5ZnyM6PygCvr'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 150,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 12,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'CUV',
+                    symbol: 'CUV',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmbgvCSGxw6r59LYYWQj6z1CUZU6ZHfwVseeeUKfSoH9mw'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 1,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 2,
+                    votingPeriod: 120,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 9,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'UNC',
+                    symbol: 'UNC',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmYLtxKJEURJ7KoGeqmT1wyERLCHtH4gdr7bSJRYa537Ub'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 1,
+                    votingPeriod: 80,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 10,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'MEK',
+                    symbol: 'MEK',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmUTa5p9ukfnXAvEraK7GczcdZnJKix4dLm9KwWTsn2xBt'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 1,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 11,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'CMPO',
+                    symbol: 'CMPO',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmQ3kFbqz1rhe6Ym9CMCNPmsfA64uh1qtrir5MfM541VQU'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 10,
+                    votingPeriod: 300,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 20,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'PEN',
+                    symbol: 'PEN',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmbACp2vABBpRu9h1r8zwMyEhT9UgZm2iDYhRGKVBAu7VQ'
             },
         ],
         testnetbsc: [
-    
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0x24D352300634fE9A7e749330168e7996C7f37C81',
+                    timelock: '',
+                    gToken: '0xC0f5A2576dAd2723ac4D3Fb5c12C7fBC1F22ACAB',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 3,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 10,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'AVEE',
+                    symbol: 'AVE',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmQ1XSSrSirhS2nAjBqL5wzBEv1kjU2ckU5ZnyM6PygCvr'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0x59dADdb16F1C4AD5092B89552eAd764106Ecf003',
+                    timelock: '',
+                    gToken: '0x873D3610B5972f8d10c63080157eC20d09BAEa67',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 150,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 12,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'CUV',
+                    symbol: 'CUV',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmbgvCSGxw6r59LYYWQj6z1CUZU6ZHfwVseeeUKfSoH9mw'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0x1DD76Ed9F4956C0A9e1c77779A18BBB626978b0e',
+                    timelock: '',
+                    gToken: '0x6Bee71539922FFd9345000Efffc143775c05C4fe',
+                    mockGoverned: ''
+                },
+                standard: 1,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 2,
+                    votingPeriod: 120,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 9,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'UNC',
+                    symbol: 'UNC',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmYLtxKJEURJ7KoGeqmT1wyERLCHtH4gdr7bSJRYa537Ub'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0x2Ef6DbFD41CD78C796B782a830BCB4c8A90bbC2A',
+                    timelock: '',
+                    gToken: '0x753524028F105541f856598dA52e6f6fa50fEBDf',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 3,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 10,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'AVEE',
+                    symbol: 'AVE',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmQ1XSSrSirhS2nAjBqL5wzBEv1kjU2ckU5ZnyM6PygCvr'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0x993B68F21a7B790D70E46d2112Ac590591416ACb',
+                    timelock: '',
+                    gToken: '0xcE9Df7B4F7522dFca356397796C9C6967142B0B2',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 150,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 12,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'CUV',
+                    symbol: 'CUV',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmbgvCSGxw6r59LYYWQj6z1CUZU6ZHfwVseeeUKfSoH9mw'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '0xB2Ca08bB484494b0ad6Afa9d231be75CaEe357d9',
+                    timelock: '',
+                    gToken: '0xa78113316cFE8C07AB65Ce5b6D2e2d83128aB600',
+                    mockGoverned: ''
+                },
+                standard: 1,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 2,
+                    votingPeriod: 120,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 9,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'UNC',
+                    symbol: 'UNC',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmYLtxKJEURJ7KoGeqmT1wyERLCHtH4gdr7bSJRYa537Ub'
+            },
+        ],
+        rinkeby: [
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 1,
+                    votingPeriod: 80,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 10,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'MEK',
+                    symbol: 'MEK',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmUTa5p9ukfnXAvEraK7GczcdZnJKix4dLm9KwWTsn2xBt'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 1,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 5,
+                    votingPeriod: 100,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 11,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'CMPO',
+                    symbol: 'CMPO',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmQ3kFbqz1rhe6Ym9CMCNPmsfA64uh1qtrir5MfM541VQU'
+            },
+            {
+                deployed: {
+                    proxyAdmin: '',
+                    governor: '',
+                    timelock: '',
+                    gToken: '',
+                    mockGoverned: ''
+                },
+                standard: 0,
+                baseConfig: {
+                    minVotingDelay: 1,
+                    maxVotingDelay: 100000,
+                    minVotingPeriod: 1,
+                    maxVotingPeriod: 100000,
+                    isWhitelistRequired: false
+                },
+                governorConfig: {
+                    votingDelay: 10,
+                    votingPeriod: 300,
+                    quorumAttendance: 1000,
+                    quorumApproval: 1000
+                },
+                timelockConfig: {
+                    minTimelockDelay: 1,
+                    maxTimelockDelay: 100000,
+                    delay: 20,
+                    gracePeriod: 100
+                },
+                initialization: {
+                    name: 'PEN',
+                    symbol: 'PEN',
+                    owner: deployer.address,
+                    decimals: 18,
+                    initialSupply: ethers.utils.parseUnits("1.0", 27)
+                },
+                infoHash: 'QmbACp2vABBpRu9h1r8zwMyEhT9UgZm2iDYhRGKVBAu7VQ'
+            },
         ]
     }
 }

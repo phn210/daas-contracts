@@ -6,6 +6,7 @@ async function main() {
     const names = [
         "DAOFactory",
         "ProxyAdmin",
+        "ProxyFactory",
         "GovernanceTokenFactory",
         "Governor",
         "Timelock",
@@ -35,11 +36,6 @@ async function main() {
             } 
         }
     );
-    
-    if (false) {
-        contracts['governordelegate']['trueAddress'] = contracts['governordelegate']['address'];
-        contracts['governordelegate']['address'] = contracts['governordelegator']['address'];    
-    }
     
     fs.writeFileSync(`${process.cwd()}/admin/${network.config.chainId}.js`, 'export default ' + JSON.stringify(contracts));
 }

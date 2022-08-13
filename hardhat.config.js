@@ -36,7 +36,8 @@ const networks = {
     chainId: 31337
   },
   testnetbsc: {
-    url: "https://data-seed-prebsc-2-s2.binance.org:8545/",
+    url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+    // "https://nd-006-375-626.p2pify.com/7d7fc1a2b5dd8f7a51697c940dd6fe33",
     // "https://data-seed-prebsc-1-s3.binance.org:8545/"
     chainId: 97,
     accounts: process.env.KEYS?.split(" "),
@@ -51,7 +52,9 @@ const networks = {
   //   explorer: "https://kovan.etherscan.io/"
   // },
   rinkeby: {
+    networkCheckTimeout: 10000, 
     chainId: 4,
+    accounts: process.env.KEYS?.split(" "),
     url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     // "https://ethereum-rinkeby-rpc.allthatnode.com/"
     // "https://rinkeby-light.eth.linkpool.io"

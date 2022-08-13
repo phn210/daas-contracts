@@ -5,7 +5,7 @@ const proposals = (mockGoverned) => {
                 shortDes: "Add new token",
                 txs: [
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "toggleWhitelistedToken(address)",
                         data: {
@@ -14,7 +14,7 @@ const proposals = (mockGoverned) => {
                         }
                     }, 
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "setPriceOracle(address,address)",
                         data: {
@@ -29,7 +29,7 @@ const proposals = (mockGoverned) => {
                 shortDes: "Update interest rate",
                 txs: [
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "setInterestRate(uint256)",
                         data: {
@@ -44,7 +44,7 @@ const proposals = (mockGoverned) => {
                 shortDes: "Update tokens' price oracle",
                 txs: [
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "setPriceOracle(address,address)",
                         data: {
@@ -53,7 +53,7 @@ const proposals = (mockGoverned) => {
                         }
                     },
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "setPriceOracle(address,address)",
                         data: {
@@ -62,7 +62,7 @@ const proposals = (mockGoverned) => {
                         }
                     },
                     {
-                        target: mockGoverned.address,
+                        target: mockGoverned.address ?? '0x0000000000000000000000000000000000000000',
                         value: 0,
                         signature: "setPriceOracle(address,address)",
                         data: {

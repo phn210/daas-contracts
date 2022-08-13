@@ -4,7 +4,7 @@ export default {
         "explorer": ""
     },
     "daofactory": {
-        "address": "",
+        "address": "0x74311A7F293122487Dc57a9FffC552af67c5B0b7",
         "interface": [
             "event DAOBlacklisted(uint256 id)",
             "event DAOCreated(uint256 id, tuple(bytes32 infoHash, address proxyAdmin, address governor, uint8 standard, bool isRetired, bool isBlacklisted) dao)",
@@ -31,7 +31,7 @@ export default {
         ]
     },
     "proxyadmin": {
-        "address": "",
+        "address": "0x756418B817E934f73Aa434DFaD4a686f836AA71d",
         "interface": [
             "event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)",
             "function changeProxyAdmin(address proxy, address newAdmin) @29000000",
@@ -44,14 +44,22 @@ export default {
             "function upgradeAndCall(address proxy, address implementation, bytes data) payable @29000000"
         ]
     },
+    "proxyfactory": {
+        "address": "0x2B2f78c5BF6D9C12Ee1225D5F374aa91204580c3",
+        "interface": [
+            "event ProxyCreated(address proxy, address implementation)",
+            "function createProxy(address _implementation, address _admin, bytes _initializeData) payable returns (address proxy_) @29000000",
+            "function createProxyAdmin(address _owner) returns (address admin_) @29000000"
+        ]
+    },
     "governancetokenfactory": {
-        "address": "",
+        "address": "0x47C446F02e41006a05735a7d5e0666e5055b44df",
         "interface": [
             "function createToken(uint8 _standard, tuple(string name, string symbol, address owner, uint8 decimals, uint256 initialSupply) _initialization, address _owner) returns (address gToken_) @29000000"
         ]
     },
     "governor": {
-        "address": "",
+        "address": "0x42Cc87749B4031c53181692c537622e5c3b7d061",
         "interface": [
             "event AdminsUpdated(address[] admins)",
             "event EmergencyActions(address guardian, address timelock, tuple(address target, uint256 value, string signature, bytes data)[] actions, string description)",
@@ -111,7 +119,7 @@ export default {
         ]
     },
     "timelock": {
-        "address": "",
+        "address": "0x8d54644bC13d08Fd9CAbe6DD84f7034d44c7B1B5",
         "interface": [
             "event GovernorSet(address governor)",
             "event Initialized(uint8 version)",
@@ -140,7 +148,7 @@ export default {
         ]
     },
     "erc20votes": {
-        "address": "",
+        "address": "0xD2547e4AA4f5a2b0a512BFd45C9E3360FeEa48Df",
         "interface": [
             "constructor(tuple(string name, string symbol, address owner, uint8 decimals, uint256 initialSupply) _initialization)",
             "event Approval(address indexed owner, address indexed spender, uint256 value)",
@@ -174,7 +182,7 @@ export default {
         ]
     },
     "erc721votes": {
-        "address": "",
+        "address": "0xB98aEf45544ACFd5A6cD2659b6e61Ce0f003Ae58",
         "interface": [
             "constructor(tuple(string name, string symbol, address owner, uint8 decimals, uint256 initialSupply) _initialization)",
             "event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)",

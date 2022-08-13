@@ -1,7 +1,6 @@
 const { ethers, network } = require("hardhat")
 
 const daoConfig = require('../config/daos');
-const proposalConfig = require('../config/proposals');
 
 const utils = require('../utils');
 const decoders = require('../utils/decoders');
@@ -130,48 +129,38 @@ async function main() {
     await Promise.all(Object.keys(contracts).map(async (key) => { contracts[key].factory = await ethers.getContractFactory(contracts[key].name); }));
     
     await Promise.all(Object.keys(deployed[network.name]).map(async (key) => { contracts[key].contract = await contracts[key].factory.attach(deployed[network.name][key]);}))
- 
-    utils.logDivider("CREATE PROPOSAL");
+   
+    utils.logDivider("DAOS");
 
-    const numDaos = daoConfig(deployer)[network.name].length;
-    for (let i = 2; i < 4; i++) {
-        await (async (dao, id) => {
-            console.log(`DAO ${id+1} proposals:`);
-            contracts['governor'].contract = contracts['governor'].factory.attach(dao.deployed.governor);
-            // contracts['governor'].contract = contracts['governor'].factory.attach(addresses.zeroAddress);
-            contracts['mockGoverned'].contract = contracts['mockGoverned'].factory.attach(addresses.zeroAddress);
-            // const numProposals = proposalConfig(contracts['mockGoverned'].contract).mock.length;
-            const numProposals = proposalConfig(addresses.zeroAddress).mock.length;
-            for (let j = 1; j < 3; j++) {
-                await(async(proposal , index) => {
-                    const preparedProposal = proposals.prepareProposal(proposal);
-                    // console.log(preparedProposal)
-                    let tx = await contracts['governor'].contract.propose(0, 0, preparedProposal.actions, preparedProposal.descriptionHash);
-                    await tx.wait();
-                    console.log(`Proposal ${index+1} created for DAO ${id+1}.`);
-                })(proposalConfig(contracts['mockGoverned'].contract).mock[j], j);
-            }
-            utils.logDivider('');
-        })(daoConfig(deployer)[network.name][i], i);
-    } 
+    const rows = [];
+    for (let i=0; i <6; i++) {
+        console.log(`DAO ${i+1}:`);
+        const dao = await contracts["daoFactory"].contract.daos(i);
+        // console.log(dao)
+        contracts["governor"].contract = contracts["governor"].factory.attach(dao.governor);
+        const votes = await contracts["governor"].contract.votes()
+        logContract('governor');
+        const row = {};
+        switch (dao.standard) {
+            case config.standards["ERC20Votes"]:
+                contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(votes)
+                logContract("erc20votes");
+                await Promise.all(signers.map(async (signer, index) => {
+                    row[`User${index-1}`] = ethers.utils.formatUnits((await contracts["erc20votes"].contract.getVotes(signer.address)).toString(), 18);
+                }))
+                break;
+            case config.standards["ERC721Votes"]:
+                contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(votes)
+                logContract("erc721votes");
+                await Promise.all(signers.map(async (signer, index) => {
+                    row[`User${index-1}`] = (await contracts["erc721votes"].contract.getVotes(signer.address)).toString();
+                }))
+                break;
+        }
+        // rows.push(row)
+    };
 
-    // utils.logDivider('VOTING');
-
-    // for (let i = 0; i < numDaos; i++) {
-    //     await (async (dao, id) => {
-    //         console.log(`DAO ${id+1} proposals:`);
-    //         contracts['governor'].contract = contracts['governor'].factory.attach(dao.deployed.governor);
-    //         contracts['mockGoverned'].contract = contracts['mockGoverned'].factory.attach(dao.deployed.mockGoverned);
-    //         await Promise.all(proposalConfig(contracts['mockGoverned'].contract).mock.map(async (proposal, index) => {
-    //             await Promise.all(signers.map(async user => {
-    //                 tx = await contracts['governor'].contract.connect(user).castVote(await contracts['governor'].contract.proposalIds(index), index % 3)
-    //                 console.log(`User voted for propsal ${index+1} of DAO ${id+1}`);
-    //             }))
-    //         }));
-    //         utils.logDivider('');
-    //     })(daoConfig(deployer).mock[i], i);
-    // }
-
+    // console.table(rows)
 
     
 

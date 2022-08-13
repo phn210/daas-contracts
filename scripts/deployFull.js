@@ -5,13 +5,9 @@ const proposals = require('./utils/proposals');
 
 async function main() {
 
-    // const [deployer, user0, user1, user2, user3, user4] = await ethers.getSigners();
-    // const signers = [deployer, user0, user1, user2, user3, user4];
-    // const users = [user0, user1, user2, user3, user4];
-
-    const [deployer, user0, user1] = await ethers.getSigners();
-    const signers = [deployer, user0, user1];
-    const users = [user0, user1];
+    const [deployer, user0, user1, user2, user3, user4] = await ethers.getSigners();
+    const signers = [deployer, user0, user1, user2, user3, user4];
+    const users = [user0, user1, user2, user3, user4];
 
     utils.logDivider("SIGNERS");
     console.log("Deployer:", deployer.address);
@@ -22,7 +18,7 @@ async function main() {
             "ERC20Votes": 0,
             "ERC721Votes": 1
         },
-        standard: 0,
+        standard: 1,
         baseConfig: {
             // [1,100000,1,100000]
             minVotingDelay: 1,
@@ -132,6 +128,7 @@ async function main() {
     await Promise.all(Object.keys(contracts).map(async (key) => { contracts[key].factory = await ethers.getContractFactory(contracts[key].name); }));
 
     utils.logDivider("DEPLOY PROCESS");
+
     // Deploy ProxyFactory
     contracts["proxyFactory"].contract = await contracts["proxyFactory"].factory.deploy();
     await contracts["proxyFactory"].contract.deployed();
@@ -139,24 +136,18 @@ async function main() {
 
     // Deploy ProxyAdmin
     preCalcAddress = await contracts["proxyFactory"].contract.callStatic.createProxyAdmin(deployer.address);
-    await contracts["proxyFactory"].contract.createProxyAdmin(deployer.address);
+    tx = await contracts["proxyFactory"].contract.createProxyAdmin(deployer.address);
+    await tx.wait();
     contracts["proxyAdmin"].contract = contracts["proxyAdmin"].factory.attach(preCalcAddress);
     logContract("proxyAdmin");
-
-    // Deploy ERC20Votes Implementation
-    contracts["erc20votes"].contract = await contracts["erc20votes"].factory.deploy(config.initialization);
-    await contracts["erc20votes"].contract.deployed();
-    logContract("erc20votes")
-    contracts["erc721votes"].contract = await contracts["erc721votes"].factory.deploy(config.initialization);
-    await contracts["erc721votes"].contract.deployed();
-    logContract("erc721votes")
 
     // Deploy GovernanceTokenFactory
     contracts["gTokenFactory"].contract = await contracts["gTokenFactory"].factory.deploy();
     await contracts["gTokenFactory"].contract.deployed();
 
     preCalcAddress = await contracts["proxyFactory"].contract.callStatic.createProxy(getAddress("gTokenFactory"), await getAddress("proxyAdmin"), "0x");
-    await contracts["proxyFactory"].contract.createProxy(getAddress("gTokenFactory"), getAddress("proxyAdmin"), "0x");
+    tx = await contracts["proxyFactory"].contract.createProxy(getAddress("gTokenFactory"), getAddress("proxyAdmin"), "0x");
+    await tx.wait();
     contracts["gTokenFactory"].contract = contracts["gTokenFactory"].factory.attach(preCalcAddress);
     logContract("gTokenFactory");
 
@@ -179,13 +170,102 @@ async function main() {
         ["address", "address", "address", "address"],
         [getAddress("governor"), getAddress("timelock"), getAddress("gTokenFactory"), deployer.address]
     ));
-    await contracts["proxyFactory"].contract.createProxy(getAddress("daoFactory"), getAddress("proxyAdmin"), utils.encodeWithSignature(
+    tx = await contracts["proxyFactory"].contract.createProxy(getAddress("daoFactory"), getAddress("proxyAdmin"), utils.encodeWithSignature(
         "initialize(address,address,address,address)",
         ["address", "address", "address", "address"],
         [getAddress("governor"), getAddress("timelock"), getAddress("gTokenFactory"), deployer.address]
     ));
+    await tx.wait();
     contracts["daoFactory"].contract = contracts["daoFactory"].factory.attach(preCalcAddress);
     logContract("daoFactory");
+    
+    // Create First DAO
+    utils.logDivider("DAAS DAO");
+
+    tx = await contracts["daoFactory"].contract.createDAO(
+        [deployer.address],
+        config.baseConfig,
+        config.governorConfig,
+        config.timelockConfig,
+        addresses.zeroAddress,
+        config.standard,
+        config.initialization,
+        config.infoHash
+    );
+    await tx.wait();
+
+    const encodedData = await contracts["daoFactory"].contract.daosInfo([0]);
+    const firstDAO = decoders.daoList(encodedData)[0];
+    console.log("First DAO:", firstDAO);
+
+    contracts["governor"].contract = contracts["governor"].factory.attach(firstDAO.governor);
+    contracts["timelock"].contract = contracts["timelock"].factory.attach(await contracts["governor"].contract.timelocks(0));
+    logContract("governor");
+    logContract("timelock");
+    
+    switch (firstDAO.standard) {
+        case config.standards["ERC20Votes"]:
+            contracts["erc20votes"].contract = contracts["erc20votes"].factory.attach(await contracts["governor"].contract.votes())
+            logContract("erc20votes");
+            break;
+        case config.standards["ERC721Votes"]:
+            contracts["erc721votes"].contract = contracts["erc721votes"].factory.attach(await contracts["governor"].contract.votes())
+            logContract("erc721votes");
+            break;
+    }
+
+   
+    utils.logDivider("MOCK PROPOSALS & VOTING");
+
+    // Prepare voting power
+    const gToken = contracts[config.standard == 0 ? "erc20votes" : "erc721votes"].contract;
+    let infos = await Promise.all([await Promise.all(signers.map(e => gToken.balanceOf(e.address))), await Promise.all(signers.map(e => gToken.getVotes(e.address)))]);
+    infos[0].map((e, i) => console.log("User", i, "balance:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
+    infos[1].map((e, i) => console.log("User", i, "votes:", config.standard == 0 ? ethers.utils.formatUnits(e, 18) : e));
+    console.log("Quorum attendance:", await contracts["governor"].contract.quorum(config.governorConfig.quorumAttendance, await utils.bn()-1));
+    console.log("Quorum approval:", await contracts["governor"].contract.quorum(config.governorConfig.quorumApproval, await utils.bn()-1));
+
+    // Deploy MockGoverned
+    contracts["mockGoverned"].contract = await contracts["mockGoverned"].factory.deploy(getAddress("timelock"));
+    await contracts["mockGoverned"].contract.deployed();
+    logContract("mockGoverned");
+
+    console.log("Before proposal value:", await contracts["mockGoverned"].contract.interestRate());
+
+    const firstProposal = config.proposals[0]
+    firstProposal.txs[0].target = getAddress("mockGoverned");
+    firstProposal.txs[0].signature = "setInterestRate(uint256)";
+    firstProposal.txs[0].data.types.push("uint256");
+    firstProposal.txs[0].data.params.push(101);
+    
+    const proposal = proposals.prepareProposal(firstProposal);
+
+    console.log("Delegates...");
+    await gToken.connect(deployer).delegate(user0.address);
+
+    console.log("Propose...");
+    console.log(proposal.actions)
+    await contracts["governor"].contract.propose(0, 0, proposal.actions, proposal.descriptionHash);
+    console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
+
+    await utils.mineBlocks(config.governorConfig.votingDelay);
+
+    console.log("User vote", await gToken.getVotes(user0.address));
+    await contracts["governor"].contract.connect(user0).castVote(await contracts["governor"].contract.proposalIds(0), 1);
+    
+    await utils.mineBlocks(config.governorConfig.votingPeriod);
+
+    console.log("Queue...");
+    await contracts["governor"].contract.queue(proposal.actions, proposal.descriptionHash);
+    
+    await utils.moveTimestamp(config.timelockConfig.delay);
+
+    console.log("Execute...");
+    await contracts["governor"].contract.execute(proposal.actions, proposal.descriptionHash);
+
+    console.log("First proposal:", decoders.proposalList(await contracts["governor"].contract.proposalsInfo([0])));
+
+    console.log("After proposal value:", await contracts["mockGoverned"].contract.interestRate());
 
     return {
         config,
